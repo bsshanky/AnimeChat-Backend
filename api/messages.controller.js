@@ -6,9 +6,9 @@ export default class MessagesController {
 
         // TODO:
         try {
-            const groupId = req.body.groupId;
+            const groupId = req.query.groupId;
             const messagesPerPage = 10;
-            const messagesLoaded = req.body.messagesLoaded ? parseInt(req.body.messagesLoaded) : 0;
+            const messagesLoaded = req.query.messagesLoaded ? parseInt(req.query.messagesLoaded) : 0;
 
             const messageListResponse = await
             MessagesDAO.getMessages({ groupId, messagesLoaded, messagesPerPage });   
@@ -68,8 +68,8 @@ export default class MessagesController {
         // TODO:
         try {
             const messageId = req.body.messageId;
-            
-            const messageResponse = await MessagesDAO.deleteMessage(messageId);
+            const userId = req.body.userId;
+            const messageResponse = await MessagesDAO.deleteMessage(messageId, userId);
 
             var { error } = messageResponse;
 

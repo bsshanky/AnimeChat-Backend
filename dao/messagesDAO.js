@@ -28,13 +28,13 @@ export default class MessagesDAO {
         let cursor;
 
         try {
-            cursor = await messages.find({ groupId: new ObjectId(groupId) })
-                                   .sort({ timestamp: -1 })
+            cursor = await messages.find({ groupId: groupId })
+                                   .sort({ timestamp: 1 })
                                    .skip(messagesLoaded)
-                                   .limit(messagesPerPage)
+                                   //.limit(messagesPerPage)
 
              const messagesList = await cursor.toArray();
-             const totalNumMessages = await messages.countDocuments({ groupId: new ObjectId(groupId) });
+             const totalNumMessages = await messages.countDocuments({ groupId: groupId });
             return { messagesList, totalNumMessages };
         }
         catch (e) {
@@ -51,7 +51,7 @@ export default class MessagesDAO {
     ) {
         try {
             const messageDoc = {
-                groupId: new ObjectId(groupId),
+                groupId: groupId,
                 senderName: userInfo.name, 
                 senderId: userInfo._id,
                 timestamp: timestamp, 
@@ -66,10 +66,11 @@ export default class MessagesDAO {
     }
     
     
-    static async deleteMessage(messageId) {
+    static async deleteMessage(messageId, userId) {
         try {
             const deleteResponse = await messages.deleteOne({
               _id: new ObjectId(messageId),
+              senderId: userId,
             });
       
             return deleteResponse
